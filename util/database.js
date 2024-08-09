@@ -1,19 +1,25 @@
-const Sequelize = require('sequelize')
-const sequelize = new Sequelize('nodeudemy', 'root', '',{
-    dialect: 'mysql',
-    host: 'localhost'
-});
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
+let _db;    
+const mongoConnect = (callback) =>{
+    MongoClient.connect('mongodb+srv://asgharali:uoC4AcskoAeuT2zh@cluster0.a9tvpbb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+    .then(client =>{
+        console.log('-----------------------CONECTED-----------------------------------');
+        _db = client.db();
+        callback()
+    }).catch(err =>{
+        console.log(err);
+    })
+}
 
-module.exports = sequelize;
-// const mysql = require('mysql2');
+const getDb = () =>{
+    if(_db){
+        return _db;
+    }
+    throw 'No database found';
+}
 
-// const pool = mysql.createPool({
-//     host: 'localhost',
-//     user: 'root',
-//     database: 'nodeudemy',
-//     password: ''
-// });
-
-// module.exports = pool.promise();
-
+exports.mongodb = mongodb;
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
 // monogo credentails asgharali uoC4AcskoAeuT2zh
