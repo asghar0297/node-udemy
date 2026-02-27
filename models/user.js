@@ -84,6 +84,8 @@ class User {
 
   }
 
+  deleteItemFromOrder
+
   addOrder(){
     const db = getDb();
     return this.getCart().then(products =>{
