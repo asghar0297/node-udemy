@@ -5,8 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database').mongoConnect;
-const User = require('./models/user');
+// const User = require('./models/user');
 
 const app = express();
 
@@ -19,21 +18,21 @@ const shopRoutes = require('./routes/shop');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
-  User.findById('69942e51a3dd6566acbe9692')
-    .then(user => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
-      next();
-    })
-    .catch(err => console.log(err));
-});
+// app.use((req, res, next) => {
+//   User.findById('69942e51a3dd6566acbe9692')
+//     .then(user => {
+//       req.user = new User(user.name, user.email, user.cart, user._id);
+//       next();
+//     })
+//     .catch(err => console.log(err));
+// });
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoose.connect('mongodb+srv://root:1234@cluster0.ura1y.mongodb.net/shop?appName=Cluster0').then(result =>{
+mongoose.connect('mongodb+srv://root:1234@cluster0.ura1y.mongodb.net/shop_v1?appName=Cluster0').then(result =>{
   app.listen(3000)
   console.log('connected');
   
