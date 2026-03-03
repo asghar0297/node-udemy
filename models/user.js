@@ -56,8 +56,6 @@ userSchema.methods.deleteItemFromCart = function(productId){
 
 userSchema.methods.addOrder = function (){
 
-    console.log(this.cart.items)
-    return 
     const db = getDb();
     return this.getCart().then(products =>{
         const order = {
