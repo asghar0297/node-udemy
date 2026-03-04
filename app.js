@@ -33,6 +33,18 @@ app.use(session({
     store: store
 }));
 
+app.use((req, res, next) =>{
+   if(!req.session.user){
+    return next()
+  }
+  User.findById(req.session.user._id)
+  .then(user =>{
+    req.user = user
+    next()
+  })
+  .catch(err =>console.log(err));
+})
+
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
@@ -47,18 +59,8 @@ app.use(errorController.get404);
 
 mongoose.connect(MONGODB_URI)
 .then(result => {
-    User.findOne().then(user =>{
-      if(!user){
-          const user = new User
-          user.name = 'Asghar Ali'
-          user.email = 'asgharali0297@gmail.com'
-          user.cart = { items:[]}
-          user.save()
-      }
-    })
-    console.log('connected');
-    app.listen(3000)
+  console.log('connected');
+  app.listen(3000)
 }).catch(err =>{
   console.log(err);
-  
 })
