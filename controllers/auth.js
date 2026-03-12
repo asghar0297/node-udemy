@@ -10,11 +10,34 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-    User.findById('69a76da70a7c347648574a70')
+    const email = req.body.email
+    const password = req.body.password
+    User.findOne({email:email})
     .then(user => {
-        req.session.isLoggedIn = true
-        req.session.user = user 
-        res.redirect('/');
+        if(!user){
+            console.log('user not found')
+            return res.redirect('/login')
+        }
+        bcrypt.compare(password,user.password)
+        .then(doMatch =>{
+            if(doMatch){
+                req.session.isLoggedIn = true
+                req.session.user = user
+                return req.session.save(err =>{
+                    console.log(err);
+                    console.log('we here at match block')
+                    res.redirect('/');
+                }) 
+            }
+            console.log('incorrect password')
+            res.redirect('/login')
+        }).catch(err =>{
+            console.log(err);
+            console.log('we here at catch block')
+            res.redirect('/login')
+            
+        })
+        
     }).catch( err =>{
         console.log(err)
     })
